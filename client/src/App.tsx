@@ -12,6 +12,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
 import Predictions from "./pages/Predictions";
+import Profile from "./pages/Profile";
 import UnitDetails from "./pages/UnitDetails";
 import Units from "./pages/Units";
 
@@ -38,6 +39,7 @@ const AppRoutes = () => {
         <Route path="/units/:unitId" element={<ProtectedRoute><UnitDetails /></ProtectedRoute>} />
         <Route path="/alerts" element={<ProtectedRoute><Alerts /></ProtectedRoute>} />
         <Route path="/predictions" element={<ProtectedRoute><Predictions /></ProtectedRoute>} />
+        <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
         <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
         <Route path="*" element={<NotFound />} />
       </Routes>

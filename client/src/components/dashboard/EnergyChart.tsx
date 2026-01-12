@@ -59,15 +59,16 @@ export const EnergyChart = ({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.2 }}
-      className="glass-card p-6"
+      whileHover={{ y: -2 }}
+      className="bg-white rounded-xl p-6 border border-[#E5E7EB] shadow-[0_4px_12px_rgba(0,0,0,0.06)] hover:shadow-[0_8px_20px_rgba(0,0,0,0.08)] transition-all duration-200"
     >
       <div className="flex items-center gap-3 mb-6">
-        <div className="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center">
+        <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
           <Zap className="w-5 h-5 text-primary" />
         </div>
         <div>
-          <h3 className="font-orbitron font-bold text-lg">{title}</h3>
-          <p className="text-sm text-muted-foreground">
+          <h3 className="font-orbitron font-bold text-lg text-[#0F172A]">{title}</h3>
+          <p className="text-sm text-[#64748B]">
             Last 30 days performance
           </p>
         </div>

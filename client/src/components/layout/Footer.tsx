@@ -4,7 +4,7 @@
  */
 
 import { motion } from "framer-motion";
-import { Github, Linkedin, Zap } from "lucide-react";
+import { Github, Linkedin } from "lucide-react";
 
 export const Footer = () => {
   return (
@@ -12,18 +12,13 @@ export const Footer = () => {
       <div className="container px-4 md:px-8 py-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
           {/* Left - Logo & Project Name */}
-          <div className="flex items-center gap-3 justify-center md:justify-start">
-            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
-              <Zap className="w-6 h-6 text-primary-foreground" />
-            </div>
-            <div className="flex flex-col">
-              <span className="font-orbitron font-bold text-lg">
-                RefineryIQ
-              </span>
-              <span className="text-xs text-muted-foreground">
-                IOCL Guwahati
-              </span>
-            </div>
+          <div className="flex flex-col justify-center md:justify-start text-center md:text-left">
+            <span className="font-orbitron font-bold text-lg">
+              RefineryIQ
+            </span>
+            <span className="text-xs text-muted-foreground">
+              IOCL Guwahati
+            </span>
           </div>
 
           {/* Center - Tagline */}

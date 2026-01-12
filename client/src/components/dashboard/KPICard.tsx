@@ -57,11 +57,8 @@ export const KPICard = ({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay }}
-      whileHover={{ scale: 1.02, y: -5 }}
-      className={cn(
-        "glass-card p-5 bg-gradient-to-br border",
-        colorClasses[color]
-      )}
+      whileHover={{ scale: 1.02, y: -2 }}
+      className="bg-white rounded-xl p-5 border border-[#E5E7EB] shadow-[0_4px_12px_rgba(0,0,0,0.06)] hover:shadow-[0_8px_20px_rgba(0,0,0,0.08)] transition-all duration-200"
     >
       <div className="flex items-start justify-between mb-4">
         <div
@@ -89,22 +86,14 @@ export const KPICard = ({
       </div>
 
       <div className="space-y-1">
-        <p className="text-sm text-muted-foreground">{name}</p>
+        <p className="text-sm text-[#64748B]">{name}</p>
         <div className="flex items-baseline gap-2">
-          <span className="text-2xl font-orbitron font-bold">
+          <span className="text-2xl font-orbitron font-bold text-[#0F172A]">
             {typeof value === "number" ? value.toLocaleString() : value}
           </span>
-          <span className="text-sm text-muted-foreground">{unit}</span>
+          <span className="text-sm text-[#475569]">{unit}</span>
         </div>
       </div>
-
-      {/* Subtle animated bar at bottom */}
-      <motion.div
-        className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-primary/50 to-transparent"
-        initial={{ scaleX: 0 }}
-        animate={{ scaleX: 1 }}
-        transition={{ duration: 1, delay: delay + 0.3 }}
-      />
     </motion.div>
   );
 };

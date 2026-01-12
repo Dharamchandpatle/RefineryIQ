@@ -16,10 +16,11 @@ import {
     LogOut,
     Settings,
     TrendingUp,
+    UserCircle,
     Zap
 } from "lucide-react";
 import { useState } from "react";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 
 const navItems = [
   {
@@ -43,6 +44,11 @@ const navItems = [
     icon: TrendingUp,
   },
   {
+    path: "/profile",
+    label: "My Profile",
+    icon: UserCircle,
+  },
+  {
     path: "/admin",
     label: "Admin Panel",
     icon: Settings,
@@ -52,14 +58,21 @@ const navItems = [
 export const Sidebar = () => {
   const [collapsed, setCollapsed] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
   const { user, logout } = useAuth();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
 
   return (
     <motion.aside
       initial={{ width: 280 }}
       animate={{ width: collapsed ? 80 : 280 }}
       transition={{ duration: 0.3, ease: "easeInOut" }}
-      className="fixed left-0 top-0 h-screen z-50 glass-card border-r border-white/10"
+      className="fixed left-0 top-0 h-screen z-50 border-r border-slate-200"
+      style={{ backgroundColor: '#FFFEF7' }}
     >
       <div className="flex flex-col h-full p-4">
         {/* Logo */}
@@ -103,25 +116,16 @@ export const Sidebar = () => {
                 key={item.path}
                 to={item.path}
                 className={cn(
-                  "flex items-center gap-3 px-3 py-3 rounded-lg transition-all duration-200 group relative",
+                  "flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-300 group relative shadow-sm border",
                   isActive
-                    ? "bg-primary/10 text-primary"
-                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                    ? "bg-[#F37021] text-white font-semibold border-[#F37021] shadow-md hover:bg-[#003A8F] hover:border-[#003A8F] hover:shadow-lg hover:scale-105"
+                    : "bg-white text-slate-600 font-medium border-slate-200 hover:border-[#003A8F] hover:bg-[#003A8F] hover:text-white"
                 )}
               >
-                {/* Active indicator */}
-                {isActive && (
-                  <motion.div
-                    layoutId="activeIndicator"
-                    className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-primary rounded-r-full"
-                    transition={{ duration: 0.2 }}
-                  />
-                )}
-
                 <Icon
                   className={cn(
                     "w-5 h-5 flex-shrink-0 transition-colors",
-                    isActive && "text-primary"
+                    isActive ? "text-white" : "text-slate-500 group-hover:text-white"
                   )}
                 />
 
@@ -137,22 +141,13 @@ export const Sidebar = () => {
                     </motion.span>
                   )}
                 </AnimatePresence>
-
-                {/* Hover glow effect */}
-                {isActive && (
-                  <motion.div
-                    className="absolute inset-0 bg-primary/5 rounded-lg"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                  />
-                )}
               </NavLink>
             );
           })}
         </nav>
 
         {/* User section */}
-        <div className="pt-4 border-t border-white/10">
+        <div className="pt-4 border-t border-slate-200">
           <AnimatePresence>
             {!collapsed && user && (
               <motion.div
@@ -175,8 +170,8 @@ export const Sidebar = () => {
           </AnimatePresence>
 
           <button
-            onClick={logout}
-            className="flex items-center gap-3 px-3 py-3 rounded-lg w-full text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
+            onClick={handleLogout}
+            className="flex items-center gap-3 px-3 py-3 rounded-lg w-full text-slate-500 hover:text-red-600 hover:bg-red-50 transition-colors"
           >
             <LogOut className="w-5 h-5 flex-shrink-0" />
             <AnimatePresence>
@@ -194,15 +189,15 @@ export const Sidebar = () => {
           </button>
 
           {/* Theme Toggle */}
-          <div className="flex items-center justify-center pt-2 border-t border-border/50">
-            <ThemeToggle className="hover:bg-primary/10 hover:text-primary" />
+          <div className="flex items-center justify-center pt-2 border-t border-slate-200">
+            <ThemeToggle className="hover:bg-amber-50 hover:text-amber-600" />
           </div>
         </div>
 
         {/* Collapse toggle */}
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="absolute -right-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-muted border border-border flex items-center justify-center hover:bg-primary/10 hover:border-primary/50 transition-colors"
+          className="absolute -right-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-white border border-slate-200 flex items-center justify-center hover:bg-amber-50 hover:border-amber-300 transition-colors shadow-sm"
         >
           {collapsed ? (
             <ChevronRight className="w-4 h-4" />

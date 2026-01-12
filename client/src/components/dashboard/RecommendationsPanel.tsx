@@ -8,11 +8,11 @@ import { Recommendation } from "@/data/mockData";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import {
-    ArrowRight,
-    ChevronRight,
-    Clock,
-    DollarSign,
-    Lightbulb,
+  ArrowRight,
+  ChevronRight,
+  Clock,
+  DollarSign,
+  Lightbulb,
 } from "lucide-react";
 
 interface RecommendationsPanelProps {
@@ -54,17 +54,18 @@ export const RecommendationsPanel = ({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.4 }}
-      className="glass-card p-6"
+      whileHover={{ y: -2 }}
+      className="bg-white rounded-xl p-6 border border-[#E5E7EB] shadow-[0_4px_12px_rgba(0,0,0,0.06)] hover:shadow-[0_8px_20px_rgba(0,0,0,0.08)] transition-all duration-200"
     >
       <div className="flex items-center gap-3 mb-6">
-        <div className="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center">
+        <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
           <Lightbulb className="w-5 h-5 text-primary" />
         </div>
         <div>
-          <h3 className="font-orbitron font-bold text-lg">
+          <h3 className="font-orbitron font-bold text-lg text-[#0F172A]">
             AI Recommendations
           </h3>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-[#64748B]">
             Optimization opportunities
           </p>
         </div>
@@ -82,7 +83,7 @@ export const RecommendationsPanel = ({
               transition={{ duration: 0.3, delay: index * 0.1 }}
               whileHover={{ scale: 1.01, x: 5 }}
               className={cn(
-                "relative p-4 rounded-lg bg-muted/30 border border-white/5 border-l-4 cursor-pointer group",
+                "relative p-4 rounded-lg bg-gray-50 border border-l-4 cursor-pointer group",
                 styles.accent
               )}
               onClick={() => onViewDetails?.(rec)}
@@ -126,7 +127,7 @@ export const RecommendationsPanel = ({
               </div>
 
               {/* Hover gradient overlay */}
-              <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-lg pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-lg pointer-events-none" />
             </motion.div>
           );
         })}
