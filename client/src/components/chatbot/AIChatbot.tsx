@@ -1,6 +1,6 @@
 /**
  * AI Chatbot Component
- * Floating chat interface for natural language queries
+ * Floating chat interface for natural language queries with audio support
  */
 
 import { Button } from "@/components/ui/button";
@@ -15,6 +15,8 @@ import {
     Send,
     Sparkles,
     User,
+    Volume2,
+    VolumeX,
     X,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
@@ -39,6 +41,7 @@ export const AIChatbot = () => {
   ]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [audioEnabled, setAudioEnabled] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -48,6 +51,30 @@ export const AIChatbot = () => {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  // Text-to-Speech function
+  const speakText = (text: string) => {
+    if (!audioEnabled || !('speechSynthesis' in window)) return;
+
+    // Cancel any ongoing speech
+    window.speechSynthesis.cancel();
+
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.rate = 0.9;
+    utterance.pitch = 1;
+    utterance.volume = 1;
+    
+    // Try to use a more natural voice if available
+    const voices = window.speechSynthesis.getVoices();
+    const preferredVoice = voices.find(voice => 
+      voice.lang.includes('en') && (voice.name.includes('Google') || voice.name.includes('Microsoft'))
+    );
+    if (preferredVoice) {
+      utterance.voice = preferredVoice;
+    }
+
+    window.speechSynthesis.speak(utterance);
+  };
 
   const handleSend = async () => {
     if (!input.trim() || isLoading) return;
@@ -74,6 +101,11 @@ export const AIChatbot = () => {
       };
 
       setMessages((prev) => [...prev, assistantMessage]);
+      
+      // Speak the response if audio is enabled
+      if (audioEnabled) {
+        speakText(response.response);
+      }
     } catch (error) {
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
@@ -92,6 +124,14 @@ export const AIChatbot = () => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSend();
+    }
+  };
+
+  const toggleAudio = () => {
+    setAudioEnabled(!audioEnabled);
+    if (audioEnabled) {
+      // Stop any ongoing speech when disabling
+      window.speechSynthesis.cancel();
     }
   };
 
@@ -164,12 +204,31 @@ export const AIChatbot = () => {
                 <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
                   <Sparkles className="w-5 h-5 text-primary-foreground" />
                 </div>
-                <div>
-                  <h3 className="font-orbitron font-bold">RefineAI Assistant</h3>
+                <div className="flex-1">
+                  <h3 className="font-orbitron font-bold">RefineryIQ Assistant</h3>
                   <p className="text-xs text-muted-foreground">
                     Powered by AI Intelligence
                   </p>
                 </div>
+                {/* Audio Toggle Button */}
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={toggleAudio}
+                  className={cn(
+                    "w-9 h-9 transition-colors",
+                    audioEnabled 
+                      ? "text-primary hover:text-primary/80 hover:bg-primary/10" 
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                  )}
+                  title={audioEnabled ? "Audio On - Click to mute" : "Audio Off - Click to enable"}
+                >
+                  {audioEnabled ? (
+                    <Volume2 className="w-5 h-5" />
+                  ) : (
+                    <VolumeX className="w-5 h-5" />
+                  )}
+                </Button>
               </div>
             </div>
 

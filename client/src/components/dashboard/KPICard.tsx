@@ -3,9 +3,9 @@
  * Displays key performance indicators with trend indicators
  */
 
-import { motion } from "framer-motion";
-import { TrendingUp, TrendingDown, Minus, LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
+import { LucideIcon, Minus, TrendingDown, TrendingUp } from "lucide-react";
 
 interface KPICardProps {
   name: string;

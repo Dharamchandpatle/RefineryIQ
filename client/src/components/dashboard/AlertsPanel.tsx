@@ -3,17 +3,17 @@
  * Displays real-time alerts with severity indicators
  */
 
-import { motion, AnimatePresence } from "framer-motion";
-import {
-  AlertTriangle,
-  AlertCircle,
-  Info,
-  CheckCircle,
-  Clock,
-} from "lucide-react";
-import { cn } from "@/lib/utils";
-import { Alert } from "@/data/mockData";
 import { Button } from "@/components/ui/button";
+import { Alert } from "@/data/mockData";
+import { cn } from "@/lib/utils";
+import { AnimatePresence, motion } from "framer-motion";
+import {
+    AlertCircle,
+    AlertTriangle,
+    CheckCircle,
+    Clock,
+    Info,
+} from "lucide-react";
 
 interface AlertsPanelProps {
   alerts: Alert[];

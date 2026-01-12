@@ -9,7 +9,6 @@ import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
 import {
     AlertTriangle,
-    Brain,
     ChevronLeft,
     ChevronRight,
     Factory,
@@ -17,7 +16,7 @@ import {
     LogOut,
     Settings,
     TrendingUp,
-    Zap,
+    Zap
 } from "lucide-react";
 import { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";

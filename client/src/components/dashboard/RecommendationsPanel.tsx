@@ -3,17 +3,17 @@
  * Displays AI-generated optimization recommendations
  */
 
+import { Button } from "@/components/ui/button";
+import { Recommendation } from "@/data/mockData";
+import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import {
-  Lightbulb,
-  ArrowRight,
-  DollarSign,
-  Clock,
-  ChevronRight,
+    ArrowRight,
+    ChevronRight,
+    Clock,
+    DollarSign,
+    Lightbulb,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { Recommendation } from "@/data/mockData";
-import { Button } from "@/components/ui/button";
 
 interface RecommendationsPanelProps {
   recommendations: Recommendation[];

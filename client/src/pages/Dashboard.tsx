@@ -3,37 +3,37 @@
  * Main control center with KPIs, charts, alerts, and recommendations
  */
 
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import {
-  Zap,
-  Gauge,
-  Factory,
-  DollarSign,
-  Leaf,
-  Clock,
-} from "lucide-react";
-import BackgroundComponent from "@/components/ui/background-components";
-import Sidebar from "@/components/layout/Sidebar";
-import KPICard from "@/components/dashboard/KPICard";
-import EnergyChart from "@/components/dashboard/EnergyChart";
+import AIChatbot from "@/components/chatbot/AIChatbot";
 import AlertsPanel from "@/components/dashboard/AlertsPanel";
+import EnergyChart from "@/components/dashboard/EnergyChart";
+import KPICard from "@/components/dashboard/KPICard";
 import RecommendationsPanel from "@/components/dashboard/RecommendationsPanel";
 import UnitStatusGrid from "@/components/dashboard/UnitStatusGrid";
-import AIChatbot from "@/components/chatbot/AIChatbot";
+import Sidebar from "@/components/layout/Sidebar";
+import BackgroundComponent from "@/components/ui/background-components";
 import {
-  energyApi,
-  kpiApi,
-  alertsApi,
-  unitsApi,
-  recommendationsApi,
-} from "@/services/api";
-import {
-  type KPIData,
-  type Alert,
-  type RefineryUnit,
-  type Recommendation,
+    type Alert,
+    type KPIData,
+    type Recommendation,
+    type RefineryUnit,
 } from "@/data/mockData";
+import {
+    alertsApi,
+    energyApi,
+    kpiApi,
+    recommendationsApi,
+    unitsApi,
+} from "@/services/api";
+import { motion } from "framer-motion";
+import {
+    Clock,
+    DollarSign,
+    Factory,
+    Gauge,
+    Leaf,
+    Zap,
+} from "lucide-react";
+import { useEffect, useState } from "react";
 
 const kpiIcons = {
   "Overall SEC": Zap,
@@ -132,51 +132,51 @@ const Dashboard = () => {
             </p>
           </motion.header>
 
-          {/* KPI Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
-            {kpis.map((kpi, index) => (
-              <KPICard
-                key={kpi.name}
-                name={kpi.name}
-                value={kpi.value}
-                unit={kpi.unit}
-                trend={kpi.trend}
-                changePercent={kpi.changePercent}
-                icon={kpiIcons[kpi.name as keyof typeof kpiIcons] || Zap}
-                color={kpiColors[kpi.name as keyof typeof kpiColors] || "primary"}
-                delay={index * 0.1}
-              />
-            ))}
+        {/* KPI Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
+          {kpis.map((kpi, index) => (
+            <KPICard
+              key={kpi.name}
+              name={kpi.name}
+              value={kpi.value}
+              unit={kpi.unit}
+              trend={kpi.trend}
+              changePercent={kpi.changePercent}
+              icon={kpiIcons[kpi.name as keyof typeof kpiIcons] || Zap}
+              color={kpiColors[kpi.name as keyof typeof kpiColors] || "primary"}
+              delay={index * 0.1}
+            />
+          ))}
+        </div>
+
+        {/* Main content grid */}
+        <div className="grid lg:grid-cols-3 gap-6 mb-8">
+          {/* Energy Chart - spans 2 columns */}
+          <div className="lg:col-span-2">
+            <EnergyChart data={energyData} />
           </div>
 
-          {/* Main content grid */}
-          <div className="grid lg:grid-cols-3 gap-6 mb-8">
-            {/* Energy Chart - spans 2 columns */}
-            <div className="lg:col-span-2">
-              <EnergyChart data={energyData} />
-            </div>
+          {/* Alerts Panel */}
+          <div className="lg:col-span-1">
+            <AlertsPanel
+              alerts={alerts}
+              onAcknowledge={handleAcknowledgeAlert}
+            />
+          </div>
+        </div>
 
-            {/* Alerts Panel */}
-            <div className="lg:col-span-1">
-              <AlertsPanel
-                alerts={alerts}
-                onAcknowledge={handleAcknowledgeAlert}
-              />
-            </div>
+        {/* Bottom grid */}
+        <div className="grid lg:grid-cols-3 gap-6">
+          {/* Unit Status Grid - spans 2 columns */}
+          <div className="lg:col-span-2">
+            <UnitStatusGrid units={units} />
           </div>
 
-          {/* Bottom grid */}
-          <div className="grid lg:grid-cols-3 gap-6">
-            {/* Unit Status Grid - spans 2 columns */}
-            <div className="lg:col-span-2">
-              <UnitStatusGrid units={units} />
-            </div>
-
-            {/* Recommendations Panel */}
-            <div className="lg:col-span-1">
-              <RecommendationsPanel recommendations={recommendations} />
-            </div>
+          {/* Recommendations Panel */}
+          <div className="lg:col-span-1">
+            <RecommendationsPanel recommendations={recommendations} />
           </div>
+        </div>
         </main>
 
         {/* AI Chatbot */}

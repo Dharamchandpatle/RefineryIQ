@@ -4,17 +4,17 @@
  */
 
 import { motion } from "framer-motion";
-import {
-  AreaChart,
-  Area,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  Legend,
-} from "recharts";
 import { Zap } from "lucide-react";
+import {
+    Area,
+    AreaChart,
+    CartesianGrid,
+    Legend,
+    ResponsiveContainer,
+    Tooltip,
+    XAxis,
+    YAxis,
+} from "recharts";
 
 interface ChartDataPoint {
   date: string;

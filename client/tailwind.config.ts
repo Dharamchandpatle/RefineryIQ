@@ -18,6 +18,12 @@ export default {
         poppins: ["Poppins", "sans-serif"],
       },
       colors: {
+        // Custom brand colors
+        brand: {
+          orange: "#F37021",
+          blue: "#003A8F",
+          "blue-dark": "#002B6B",
+        },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -104,6 +110,10 @@ export default {
           "0%": { transform: "rotate(0deg)" },
           "100%": { transform: "rotate(360deg)" },
         },
+        borderSlide: {
+          "0%": { backgroundPosition: "0% 50%" },
+          "100%": { backgroundPosition: "200% 50%" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -113,6 +123,10 @@ export default {
         "pulse-glow": "pulse-glow 2s ease-in-out infinite",
         "float": "float 3s ease-in-out infinite",
         "spin-slow": "spin-slow 20s linear infinite",
+        borderMove: "borderSlide 3s linear infinite",
+      },
+      backgroundSize: {
+        "200": "200% 200%",
       },
       backdropBlur: {
         xs: "2px",

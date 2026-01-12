@@ -8,6 +8,7 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import Admin from "./pages/Admin";
 import Alerts from "./pages/Alerts";
 import Dashboard from "./pages/Dashboard";
+import Home from "./pages/Home";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
 import Predictions from "./pages/Predictions";
@@ -30,8 +31,8 @@ const AppRoutes = () => {
   return (
     <AuthContext.Provider value={authState}>
       <Routes>
+        <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/" element={<Navigate to="/dashboard" replace />} />
         <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
         <Route path="/units" element={<ProtectedRoute><Units /></ProtectedRoute>} />
         <Route path="/units/:unitId" element={<ProtectedRoute><UnitDetails /></ProtectedRoute>} />

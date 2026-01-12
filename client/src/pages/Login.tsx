@@ -21,7 +21,7 @@ import {
     Zap,
 } from "lucide-react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -75,26 +75,26 @@ const Login = () => {
             transition={{ duration: 0.6 }}
             className="flex flex-col justify-center"
           >
-            {/* Logo */}
-            <div className="flex items-center gap-4 mb-8">
-              <motion.div
-                className="relative"
-                animate={{ rotate: [0, 360] }}
-                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-              >
-                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center glow-primary">
-                  <Brain className="w-8 h-8 text-primary-foreground" />
+            {/* Logo - Clickable to navigate home */}
+            <Link to="/" className="flex items-center gap-4 mb-8 group">
+              <div className="relative flex-shrink-0">
+                <div className="w-16 h-16 rounded-xl overflow-hidden bg-white flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all">
+                  <img 
+                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFPC-soVqmkNILA6QUDqpv9ZRMbkunkW6TRw&s" 
+                    alt="IOCL Logo" 
+                    className="w-14 h-14 object-contain"
+                  />
                 </div>
-              </motion.div>
+              </div>
               <div>
-                <h1 className="font-orbitron font-bold text-3xl text-gradient-primary">
+                <p className="text-xs text-muted-foreground mb-1">
+                  Indian Oil Corporation Ltd.
+                </p>
+                <h1 className="font-orbitron font-bold text-2xl lg:text-3xl text-gradient-primary group-hover:scale-105 transition-transform">
                   RefineryIQ
                 </h1>
-                <p className="text-muted-foreground">
-                  Smart Refinery Intelligence
-                </p>
               </div>
-            </div>
+            </Link>
 
             <h2 className="font-orbitron font-bold text-2xl lg:text-3xl mb-4">
               AI-Driven Energy & Safety Intelligence Platform
@@ -137,10 +137,10 @@ const Login = () => {
           >
             <div className="w-full max-w-md glass-card p-8">
               <div className="text-center mb-8">
-                <h2 className="font-orbitron font-bold text-2xl mb-2">
+                <h2 className="font-orbitron font-bold text-2xl mb-2 text-[#003A8F]">
                   Welcome Back
                 </h2>
-                <p className="text-muted-foreground">
+                <p className="text-gray-500 dark:text-gray-400">
                   Sign in to access your dashboard
                 </p>
               </div>
@@ -192,7 +192,8 @@ const Login = () => {
                 <Button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full bg-gradient-to-r from-primary to-secondary text-primary-foreground hover:from-primary/90 hover:to-secondary/90 font-medium"
+                  variant="primary"
+                  className="w-full font-medium"
                 >
                   {isLoading ? (
                     <>

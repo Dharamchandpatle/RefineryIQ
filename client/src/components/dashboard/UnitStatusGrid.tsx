@@ -3,19 +3,19 @@
  * Displays status cards for all refinery units
  */
 
-import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
-import {
-  Factory,
-  Activity,
-  Gauge,
-  AlertTriangle,
-  CheckCircle,
-  Wrench,
-  XCircle,
-} from "lucide-react";
-import { cn } from "@/lib/utils";
 import { RefineryUnit } from "@/data/mockData";
+import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
+import {
+    Activity,
+    AlertTriangle,
+    CheckCircle,
+    Factory,
+    Gauge,
+    Wrench,
+    XCircle,
+} from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface UnitStatusGridProps {
   units: RefineryUnit[];
