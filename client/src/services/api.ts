@@ -275,67 +275,134 @@ export const recommendationsApi = {
 
 /**
  * Chatbot API
- * Simulates AI-powered responses
+ * Uses Google's Gemini AI for intelligent responses
  */
 export const chatbotApi = {
   /**
-   * Send query to AI chatbot
+   * Send query to AI chatbot using Gemini API
    */
   query: async (
     message: string
   ): Promise<{ response: string; data?: unknown }> => {
-    await delay(1000);
-
-    const lowerMessage = message.toLowerCase();
-
-    // Pattern matching for different query types
-    if (lowerMessage.includes("sec") || lowerMessage.includes("energy consumption")) {
-      return {
-        response: `The current overall Specific Energy Consumption (SEC) is 0.0842 MWh/bbl, which is 2.3% lower than last week. The CDU has the best SEC at 0.072 MWh/bbl, while the FCC is showing elevated SEC at 0.095 MWh/bbl due to catalyst regeneration issues.`,
-        data: kpis.find((k) => k.name === "Overall SEC"),
-      };
+    const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
+    
+    if (!API_KEY) {
+      throw new Error("Gemini API key is not configured. Please add VITE_GEMINI_API_KEY to your .env file.");
     }
 
-    if (lowerMessage.includes("alert") || lowerMessage.includes("alarm")) {
-      const activeAlerts = alerts.filter((a) => !a.acknowledged);
+    try {
+      // Build context about the refinery for better AI responses
+      const lowerMessage = message.toLowerCase();
+      const isRefineryQuestion = 
+        lowerMessage.includes("sec") || 
+        lowerMessage.includes("energy") || 
+        lowerMessage.includes("alert") || 
+        lowerMessage.includes("refinery") || 
+        lowerMessage.includes("unit") || 
+        lowerMessage.includes("efficiency") || 
+        lowerMessage.includes("recommendation") ||
+        lowerMessage.includes("prediction") ||
+        lowerMessage.includes("optimize") ||
+        lowerMessage.includes("plant");
+
+      let context = "";
+      if (isRefineryQuestion) {
+        context = `You are RefineryIQ Assistant, an AI expert in refinery operations and energy management. 
+      
+Current Refinery Status:
+- Overall SEC: 0.0842 MWh/bbl
+- Active Alerts: ${alerts.filter(a => !a.acknowledged).length}
+- Processing Units: 8 total (6 online, 1 maintenance, 1 warning)
+- Current Efficiency: 91.4%
+- Total Capacity: 470,000 bbl/day
+
+Available Data:
+${JSON.stringify({
+  kpis: kpis.map(k => ({ name: k.name, value: k.value, unit: k.unit })),
+  activeAlerts: alerts.filter(a => !a.acknowledged).map(a => ({ unitId: a.unitId, type: a.type, message: a.message })),
+  units: refineryUnits.map(u => ({ unitId: u.unitId, name: u.name, status: u.status, efficiency: u.efficiency })),
+  recommendations: recommendations.slice(0, 3).map(r => ({ title: r.title, priority: r.priority, potentialSavings: r.potentialSavings }))
+}, null, 2)}
+
+Provide helpful, concise, and technical responses about refinery operations, energy consumption, alerts, and optimization recommendations. Use the data provided when relevant to the question.
+
+`;
+      } else {
+        context = "You are RefineryIQ Assistant, a helpful AI assistant. Answer the user's question clearly and concisely.\n\n";
+      }
+
+      const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-goog-api-key": API_KEY,
+          },
+          body: JSON.stringify({
+            contents: [
+              {
+                parts: [
+                  {
+                    text: `${context}User Question: ${message}`,
+                  },
+                ],
+              },
+            ],
+            generationConfig: {
+              temperature: 0.7,
+              topK: 40,
+              topP: 0.95,
+              maxOutputTokens: 1024,
+            },
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        console.error("Gemini API Error Response:", errorData);
+        throw new Error(errorData.error?.message || `API Error: ${response.status} ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      const aiResponse = data.candidates?.[0]?.content?.parts?.[0]?.text || 
+        "I apologize, but I couldn't generate a response. Please try again.";
+
+      // Extract relevant data based on the query for refinery questions
+      let relevantData = undefined;
+      
+      if (lowerMessage.includes("sec") || lowerMessage.includes("energy consumption")) {
+        relevantData = kpis.find((k) => k.name === "Overall SEC");
+      } else if (lowerMessage.includes("alert") || lowerMessage.includes("alarm")) {
+        relevantData = alerts.filter((a) => !a.acknowledged);
+      } else if (lowerMessage.includes("recommendation") || lowerMessage.includes("optimize")) {
+        relevantData = recommendations.slice(0, 3);
+      } else if (lowerMessage.includes("prediction") || lowerMessage.includes("forecast")) {
+        relevantData = generatePredictions();
+      } else if (lowerMessage.includes("unit")) {
+        relevantData = refineryUnits;
+      }
+
       return {
-        response: `There are currently ${activeAlerts.length} active alerts. The most critical is the pressure fluctuation in CDU Column 3, which was detected 5 minutes ago. I recommend immediate investigation by the control room operator.`,
-        data: activeAlerts,
+        response: aiResponse,
+        data: relevantData,
+      };
+    } catch (error: any) {
+      console.error("Gemini API Error:", error);
+      console.error("Error details:", error.message);
+      
+      // Check if API key is missing
+      if (!API_KEY) {
+        return {
+          response: `⚠️ Gemini API key is not configured. Please check that your .env file contains VITE_GEMINI_API_KEY and restart the dev server.`,
+        };
+      }
+      
+      // Fallback to mock responses if API fails
+      return {
+        response: `⚠️ I'm having trouble connecting to the Gemini AI service (${error.message}). Please check:\n1. Your internet connection\n2. The API key is valid\n3. The dev server was restarted after adding the .env file\n\nFor now, I can help with basic refinery info. The current SEC is 0.0842 MWh/bbl, there are ${alerts.filter(a => !a.acknowledged).length} active alerts, and the plant is running at 91.4% efficiency.`,
       };
     }
-
-    if (lowerMessage.includes("recommendation") || lowerMessage.includes("optimize")) {
-      return {
-        response: `I have ${recommendations.length} optimization recommendations. The top priority is to optimize the FCC regenerator temperature, which could save $125,000 annually. Would you like me to explain the implementation steps?`,
-        data: recommendations.slice(0, 3),
-      };
-    }
-
-    if (lowerMessage.includes("prediction") || lowerMessage.includes("forecast")) {
-      const predictions = generatePredictions();
-      return {
-        response: `Based on historical patterns and current operating conditions, I predict the plant will consume approximately ${predictions[0].predictedEnergy} MWh tomorrow with a production of ${predictions[0].predictedProduction} barrels. Confidence level is ${(predictions[0].confidence * 100).toFixed(0)}%.`,
-        data: predictions,
-      };
-    }
-
-    if (lowerMessage.includes("efficiency") || lowerMessage.includes("performance")) {
-      return {
-        response: `The current plant efficiency is 91.4%, up 1.2% from last week. The best performing unit is the ISO (Isomerization) at 95.2% efficiency, while the FCC is currently underperforming at 87.8% due to ongoing catalyst issues.`,
-        data: refineryUnits.map((u) => ({ unitId: u.unitId, efficiency: u.efficiency })),
-      };
-    }
-
-    if (lowerMessage.includes("unit") || lowerMessage.includes("cdu") || lowerMessage.includes("fcc")) {
-      return {
-        response: `The refinery has 8 major processing units. Currently, 6 units are online, 1 is in maintenance (HDS), and 1 has warnings (FCC). The total processing capacity is 470,000 bbl/day with current utilization at 91%.`,
-        data: refineryUnits,
-      };
-    }
-
-    // Default response
-    return {
-      response: `I can help you with information about energy consumption, SEC metrics, alerts, optimization recommendations, predictions, and unit performance. Please ask me about any of these topics, or be more specific about what you'd like to know.`,
-    };
   },
 };
